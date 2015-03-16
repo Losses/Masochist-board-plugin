@@ -12,6 +12,11 @@
 #green_call_dialog {
     padding: 10px;
     position: absolute;
+    margin-top: 30px;
+    opacity: 0;
+    visibility: hidden;
+
+    transition: margin-top 300ms, opacity 300ms, visibility 300ms;
 
     &::before, &::after {
         content: '\feff';
@@ -29,5 +34,13 @@
     &::after {
         top: -7px;
         border-color: transparent transparent white transparent;
+    }
+
+    &.show {
+        margin-top: 0;
+        opacity: 1;
+        visibility: visible;
+
+        transition: margin-top 300ms, opacity 300ms, visibility 300ms;
     }
 }

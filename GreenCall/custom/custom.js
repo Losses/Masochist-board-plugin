@@ -56,5 +56,12 @@ $('body')
         dialogElement.css({
             'top': greenCallTop,
             'left': greenCallLeft
-        });
+        })
+            .addClass('show');
+    })
+
+    .delegate('.green_call', 'mouseleave', function () {
+        var dialogElement = $('#green_call_dialog');
+
+        dialogElement.removeClass('show');
     });
