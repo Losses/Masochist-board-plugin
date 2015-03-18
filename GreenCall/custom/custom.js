@@ -7,9 +7,19 @@ $(document).ready(function () {
             'id': 'green_call_dialog',
             'class': 'card'
         })
-        .text('loading');
+        .html(
+        '<div class="loading loading_spin">' +
+        '    <svg class="circular">' +
+        '        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>' +
+        '    </svg>' +
+        '</div>' +
+        '<div class="call_content">' +
+        '    <span class="author"></span>' +
+        '    <span class="content"></span>' +
+        '</div>'
+    );
 
-    $('#common').after(dialogElement);
+    $('#common').append(dialogElement);
 });
 
 $('body')
@@ -50,7 +60,7 @@ $('body')
 
         var dialogElement = $('#green_call_dialog')
             , greenCallerPosition = $(this).offset()
-            , greenCallLeft = greenCallerPosition.left + parseInt($(this).width()) - parseInt(dialogElement.width())
+            , greenCallLeft = greenCallerPosition.left + parseInt($(this).width()) - parseInt(dialogElement.width()) * 0.5 - 20
             , greenCallTop = greenCallerPosition.top + 25;
 
         dialogElement.css({
@@ -58,6 +68,21 @@ $('body')
             'left': greenCallLeft
         })
             .addClass('show');
+
+        $.post('api/?plugin', {
+            'api': 'lark.losses.green.call',
+            'target_id': $(this).text().match(/>>([1-9]+)/)[1]
+        }, function (data) {
+            var response;
+            try {
+                response = JSON.parse(data);
+            } catch (e) {
+
+            }
+
+            dialogElement.find('.author').text(response.author);
+            dialogElement.find('.content').text(response.content);
+        });
     })
 
     .delegate('.green_call', 'mouseleave', function () {

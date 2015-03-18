@@ -10,7 +10,8 @@
 }
 
 #green_call_dialog {
-    padding: 10px;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.9);
     position: absolute;
     margin-top: 30px;
     opacity: 0;
@@ -42,5 +43,26 @@
         visibility: visible;
 
         transition: margin-top 300ms, opacity 300ms, visibility 300ms;
+    }
+
+    .loading {
+        margin: 0;
+        position: static;
+        opacity: 1;
+        display: block;
+        visibility: visible;
+    }
+
+    .author {
+        color: #342d40;
+        font-size: 12px;
+        line-height: 2em;
+        display: block;
+    }
+
+    .content {
+        margin-top: 8px;
+        font-size: 14px;
+        color: #16092d;
     }
 }
