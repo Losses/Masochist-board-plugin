@@ -1,0 +1,49 @@
+<form name="pluginCtrl$pluginPageCtrl.LineSurvey">
+    <section ng-show="!viewed">
+        <h1>
+            {{title}}
+        </h1>
+        <article>
+            {{guidePage}}
+        </article>
+
+        <button ng-click="viewed = true" ng-init="viewed = false">
+            我已阅读并同意
+        </button>
+    </section>
+    <section ng-show="viewed">
+        <ul>
+            <li ng-repeat="singleQuestion in question | object2Array | startFrom : currentPage * pageSize | limitTo : pageSize">
+                {{singleQuestion.question}}
+
+                <div ng-if="singleQuestion.type == 's'">
+                    <label ng-repeat="(sid,singleSelection) in singleQuestion.selection">
+                        <input name="{{singleQuestion.id}}" type="radio"
+                               ng-value="sid" ng-model="formData[singleQuestion.id]"/>
+                        <span>{{singleSelection}}</span>
+                    </label>
+                </div>
+
+                <div ng-if="singleQuestion.type == 'm'">
+                    <label ng-repeat="(sid,singleSelection) in singleQuestion.selection">
+                        <input name="{{sid}}" type="checkbox"
+                               ng-model="formData[singleQuestion.id][sid]"/>
+                        <span>{{singleSelection}}</span>
+                    </label>
+                </div>
+            </li>
+
+            <button ng-click="switchPage(-1)"
+                    ng-if="currentPage != 0">
+                上一页
+            </button>
+
+            <button ng-click="switchPage(1)"
+                    ng-if="currentPage < maxPage - 1">
+                下一页
+            </button>
+
+            <button ng-click="submitForm()">提交问卷</button>
+        </ul>
+    </section>
+</form>
