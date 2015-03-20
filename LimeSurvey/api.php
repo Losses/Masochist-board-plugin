@@ -9,21 +9,34 @@
 global $plugin;
 global $database;
 
+$database
+    ->query("CREATE TABLE IF NOT EXISTS `limesurvey` (
+              `id` INT NOT NULL AUTO_INCREMENT,
+              `sheet` MEDIUMTEXT NULL,
+              `type` TEXT(15) NULL,
+              `key` LONGTEXT NULL,
+              `value` LONGTEXT NULL,
+              `user` LONGTEXT NULL,
+              PRIMARY KEY (`id`))")
+    ->fetchAll();
+
 $sheet_content = [];
 $sheet_name = 'unnamed_sheet';
+$dir_location = $plugin->config['losses.lime.survey']['dir_location'];
 
 if (!isset($_SESSION['LimeSurvey']['id']))
     $_SESSION['LimeSurvey']['id'] = md5(md5(get_ip_address() . date('Y-m-d H:i:s')));
 
-if (isset($_POST['sheet'])) {
-    $dir_location = $plugin->config['losses.lime.survey']['dir_location'];
-    $sheet_name = $_POST['sheet'];
+if (!isset($_POST['sheet']))
+    response_message(403, 'please select a sheet');
 
-    if (!is_file($sheet_location = "$dir_location/question_db/$sheet_name.json"))
-        response_message(404, "$sheet_location");
+$sheet_name = $_POST['sheet'];
 
-    $sheet_content = json_decode(file_get_contents($sheet_location), true);
-}
+if (!is_file($sheet_location = "$dir_location/question_db/$sheet_name.json"))
+    response_message(404, "$sheet_location");
+
+$sheet_content = json_decode(file_get_contents($sheet_location), true);
+
 
 if (isset($_POST['action'])) {
     if ($_POST['action'] == 'get') {
@@ -66,6 +79,50 @@ if (isset($_POST['action'])) {
     }
 
     if ($_POST['action'] == 'submit') {
+        $finish_notice = 'success';
 
+        if (!isset($_POST['form_data']))
+            response_message(403, "请发送表单信息");
+
+        $form_data = json_decode($_POST['form_data'], true);
+        $questions = $sheet_content['sheet'];
+        $required = [];
+
+        for ($i = 0; $i < count($questions); $i++) {
+            if (!isset($questions[$i]['required'])
+                || $questions[$i]['required'] != false
+            ) {
+                $required[] = $i;
+            }
+        }
+
+        for ($i = 0; $i < count($required); $i++) {
+            $id = isset($questions[$required[$i]]['id']) ?
+                $questions[$required[$i]]['id'] :
+                $_POST['sheet'] . '-' . str_pad($required[$i], 2, "0", STR_PAD_LEFT);
+
+            if (!isset($form_data[$id]))
+                response_message(403, '请完成所有必填内容！');
+        }
+
+        $query_insert = [];
+
+        foreach ($form_data as $key => $value) {
+            $query_insert[] = [
+                'user' => $_SESSION['LimeSurvey']['id'],
+                'sheet' => $_POST['sheet'],
+                'type' => 'answer',
+                'key' => $key,
+                'value' => $value
+            ];
+        }
+
+        if (is_file($statistic_location = "$dir_location/statistics/$sheet_name.php"))
+            require $statistic_location;
+
+        $final_query = $database->insert('limesurvey', $query_insert);
+
+        response_message(200, $finish_notice);
+        exit();
     }
 }
