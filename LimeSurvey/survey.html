@@ -1,49 +1,130 @@
-<form name="pluginCtrl$pluginPageCtrl.LineSurvey">
-    <section ng-show="!viewed">
-        <h1>
-            {{title}}
-        </h1>
-        <article>
-            {{guidePage}}
-        </article>
+<style>
+    .lime_survey button {
+        border: 0;
+        border-radius: 3px;
+        background: #ff9800;
+        color: white;
+        margin: 10px;
+        padding: 10px 30px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        transition: all 300ms;
+    }
 
-        <button ng-click="viewed = true" ng-init="viewed = false">
-            我已阅读并同意
-        </button>
-    </section>
-    <section ng-show="viewed">
-        <ul>
-            <li ng-repeat="singleQuestion in question | object2Array | startFrom : currentPage * pageSize | limitTo : pageSize">
-                {{singleQuestion.question}}
+    .lime_survey button:hover {
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
 
-                <div ng-if="singleQuestion.type == 's'">
-                    <label ng-repeat="(sid,singleSelection) in singleQuestion.selection">
-                        <input name="{{singleQuestion.id}}" type="radio"
-                               ng-value="sid" ng-model="formData[singleQuestion.id]"/>
-                        <span>{{singleSelection}}</span>
-                    </label>
-                </div>
+    .lime_survey button:active, .lime_survey button:focus {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    }
 
-                <div ng-if="singleQuestion.type == 'm'">
-                    <label ng-repeat="(sid,singleSelection) in singleQuestion.selection">
-                        <input name="{{sid}}" type="checkbox"
-                               ng-model="formData[singleQuestion.id][sid]"/>
-                        <span>{{singleSelection}}</span>
-                    </label>
-                </div>
-            </li>
+    .lime_survey .guide_page h1 {
+        color: #16092d;
+        text-align: center;
+        font-size: 20px;
+        line-height: 3em;
+    }
 
-            <button ng-click="switchPage(-1)"
-                    ng-if="currentPage != 0">
-                上一页
+    .lime_survey .guide_page article {
+        font-size: 14px;
+        line-height: 2em;
+    }
+
+    .lime_survey .question {
+        font-size: 16px;
+        line-height: 2em;
+        color: #342d40;
+    }
+
+    .lime_survey .answer_area {
+        font-size: 14px;
+        line-height: 2em;
+
+        margin: 0 3px;;
+    }
+
+    .lime_survey label {
+        margin: 0 5px;
+        padding: 3px 8px;
+        text-align: center;
+        cursor: pointer;
+
+        transition: all 300ms;
+        display: inline-block;
+    }
+
+    .selected {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .multi .selected {
+        background: #009688;
+        color: white;
+    }
+
+    label > input[type='checkbox'],
+    label > input[type='radio'] {
+        display: none;
+    }
+</style>
+<div class="lime_survey">
+    <form name="pluginCtrl$pluginPageCtrl.LineSurvey">
+        <section class="guide_page" ng-show="!viewed && !finished">
+            <h1>
+                {{title}}
+            </h1>
+            <article ng-bind-html="guidePage | trustHtml">
+            </article>
+
+            <button ng-click="viewed = true" ng-init="viewed = false">
+                我已阅读并同意
             </button>
+        </section>
+        <section ng-show="viewed  && !finished">
+            <ul>
+                <li ng-repeat="singleQuestion in question | object2Array | startFrom : currentPage * pageSize | limitTo : pageSize">
+                    <span class="question">{{singleQuestion.question}}</span>
 
-            <button ng-click="switchPage(1)"
-                    ng-if="currentPage < maxPage - 1">
-                下一页
-            </button>
+                    <div ng-if="singleQuestion.type == 's'" class="answer_area">
+                        <label ng-repeat="(sid,singleSelection) in singleQuestion.selection"
+                               ng-class="{selected : formData[singleQuestion.id] === getSid(sid)}">
+                            <input name="{{singleQuestion.id}}" type="radio"
+                                   ng-value="getSid(sid)" ng-model="formData[singleQuestion.id]"/>
+                            <span>{{singleSelection}}</span>
+                        </label>
+                    </div>
 
-            <button ng-click="submitForm()">提交问卷</button>
-        </ul>
-    </section>
-</form>
+                    <div ng-if="singleQuestion.type == 'm'" class="answer_area multi">
+                        <label ng-repeat="(sid,singleSelection) in singleQuestion.selection"
+                               ng-class="{selected : formData[singleQuestion.id + '_' + sid] === true}">
+                            <input name="{{sid}}" type="checkbox"
+                                   ng-model="formData[singleQuestion.id + '_' + sid]"/>
+                            <span>{{singleSelection}}</span>
+                        </label>
+                    </div>
+                </li>
+
+                <button ng-click="switchPage(-1)"
+                        ng-if="currentPage != 0">
+                    上一页
+                </button>
+
+                <button ng-click="switchPage(1)"
+                        ng-if="currentPage < maxPage - 1">
+                    下一页
+                </button>
+
+                <button ng-click="submitForm()" ng-show="!loading">提交问卷</button>
+            </ul>
+        </section>
+        <section ng-show="viewed && finished">
+            <h1>
+                {{title}}
+            </h1>
+            <article>
+                {{finishNotice}}
+            </article>
+        </section>
+    </form>
+</div>

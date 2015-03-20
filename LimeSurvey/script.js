@@ -8,6 +8,7 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
         $scope.pageSize = 10;
         $scope.maxPage = 0;
         $scope.formData = {};
+        $scope.finished = false;
         $scope.switchPage = function (action) {
             if (action > 0) {
                 if ($scope.currentPage + action >= $scope.maxPage) {
@@ -24,12 +25,47 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
         };
 
         $scope.submitForm = function () {
+            $scope.loading = true;
+            switchLoading(true);
+
             for (var k = 0; k < $scope.required.length; k++) {
                 if ($scope.formData[$scope.required[k]] === undefined) {
                     publicWarning('问卷中有未完成的题目！');
-                    break;
+                    return false;
                 }
             }
+
+            $http({
+                method: 'POST',
+                url: 'api/?plugin',
+                data: $.param({
+                    'api': 'losses.lime.survey',
+                    'sheet': $rootScope.routeSplited[1],
+                    'action': 'submit',
+                    'form_data': JSON.stringify($scope.formData)
+                }),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).success(function (response) {
+                switchLoading(false);
+
+                if (!response.code) {
+                    $scope.loading = false;
+                    publicWarning(response);
+                }
+
+                if (response.code !== 200) {
+                    $scope.loading = false;
+                    publicWarning(response.message);
+                }
+                else {
+                    $scope.finished = true;
+                    $scope.finishNotice = response.message;
+                }
+            });
+        };
+
+        $scope.getSid = function (sid) {
+            return parseInt(sid.match(/[0-9]+/));
         };
 
 
@@ -52,8 +88,6 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
             for (var key in response.question) {
                 if (response.question[key].required === undefined /*nxt line*/
                     || response.question[key].required === true) {
-                    console.log(response.question[key].required);
-
                     $scope.required.push(key);
                 }
             }
