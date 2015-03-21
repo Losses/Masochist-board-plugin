@@ -82,11 +82,15 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function (response) {
                 $scope.surveyList = [];
-                for (var i = 0; i < response.length; i++) {
+
+                $scope.finished = response.finished;
+
+                for (var i = 0; i < response.surveyList.length; i++) {
                     $scope.surveyList.push({
-                        'location': '#/' + $rootScope.routeSplited[0] + '/' + response[i].location,
-                        'name':response[i].name
-                    })
+						'finished': $scope.finished.indexOf(response.surveyList[i].location) === -1,
+                        'location': '#/' + $rootScope.routeSplited[0] + '/' + response.surveyList[i].location,
+                        'name':response.surveyList[i].name
+                    });
                 }
             });
         } else {
