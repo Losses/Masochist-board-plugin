@@ -27,6 +27,11 @@ $dir_location = $plugin->config['losses.lime.survey']['dir_location'];
 if (!isset($_SESSION['LimeSurvey']['id']))
     $_SESSION['LimeSurvey']['id'] = md5(md5(get_ip_address() . date('Y-m-d H:i:s')));
 
+if (isset($_POST['list'])) {
+    echo file_get_contents("$dir_location/list.json");
+    exit();
+}
+
 if (!isset($_POST['sheet']))
     response_message(403, 'please select a sheet');
 
