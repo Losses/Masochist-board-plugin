@@ -28,7 +28,19 @@ if (!isset($_SESSION['LimeSurvey']['id']))
     $_SESSION['LimeSurvey']['id'] = md5(md5(get_ip_address() . date('Y-m-d H:i:s')));
 
 if (isset($_POST['list'])) {
-    echo file_get_contents("$dir_location/list.json");
+    $return = [];
+    $return['surveyList'] = json_decode(file_get_contents("$dir_location/list.json"), true);
+    $id = $_SESSION['LimeSurvey']['id'];
+    
+    $return['finished'] = [];
+    $finished_sheet = $database->query("SELECT `sheet` FROM `limesurvey`
+                                        WHERE `user` = '$id'
+                                        GROUP BY `sheet`")->fetchAll();
+    for ($i = 0; $i<count($finished_sheet); $i++){
+		$return['finished'][] = $finished_sheet[$i]['sheet'];
+	}
+
+    echo json_encode($return);
     exit();
 }
 
