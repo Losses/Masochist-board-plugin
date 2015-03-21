@@ -61,7 +61,7 @@ if (isset($_POST['action'])) {
 
             $return['question'][$id]['id'] = $id;
 
-            $required_fill = ['question', 'type', 'required'];
+            $required_fill = ['question', 'type', 'required', 'suffix', 'prefix', 'hint'];
 
             for ($l = 0; $l < count($required_fill); $l++) {
                 if (isset($single_question[$required_fill[$l]]))
