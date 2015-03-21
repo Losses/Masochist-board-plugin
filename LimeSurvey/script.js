@@ -3,6 +3,8 @@
  */
 
 mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http) {
+        $scope.route = $rootScope.routeSplited[1];
+
         $scope.viewed = false;
         $scope.currentPage = 0;
         $scope.pageSize = 10;
@@ -68,38 +70,58 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
             return parseInt(sid.match(/[0-9]+/));
         };
 
-
-        $http({
-            method: 'POST',
-            url: 'api/?plugin',
-            data: $.param({
-                'api': 'losses.lime.survey',
-                'sheet': $rootScope.routeSplited[1],
-                'action': 'get'
-            }),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (response) {
-            $scope.title = response.sheet_info.title;
-            $scope.guidePage = response.sheet_info.guidePage;
-            $scope.pageSize = response.sheet_info.questionPerPage;
-            $scope.maxPage = Math.ceil(Object.keys(response.question).length / $scope.pageSize);
-            $scope.required = [];
-
-            for (var key in response.question) {
-                if (response.question[key].required === undefined /*nxt line*/
-                    || response.question[key].required === true) {
-                    $scope.required.push(key);
+        if ($scope.route === '' /**/
+            || $scope.route === undefined) {
+            $http({
+                method: 'POST',
+                url: 'api/?plugin',
+                data: $.param({
+                    'api': 'losses.lime.survey',
+                    'list': ''
+                }),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).success(function (response) {
+                $scope.surveyList = [];
+                for (var i = 0; i < response.length; i++) {
+                    $scope.surveyList.push({
+                        'location': '#/' + $rootScope.routeSplited[0] + '/' + response[i].location,
+                        'name':response[i].name
+                    })
                 }
-            }
+            });
+        } else {
+            $http({
+                method: 'POST',
+                url: 'api/?plugin',
+                data: $.param({
+                    'api': 'losses.lime.survey',
+                    'sheet': $rootScope.routeSplited[1],
+                    'action': 'get'
+                }),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).success(function (response) {
+                $scope.title = response.sheet_info.title;
+                $scope.guidePage = response.sheet_info.guidePage;
+                $scope.pageSize = response.sheet_info.questionPerPage;
+                $scope.maxPage = Math.ceil(Object.keys(response.question).length / $scope.pageSize);
+                $scope.required = [];
 
-            if (response.sheet_info) {
-                $scope.sheetInfo = response.sheet_info;
-            }
+                for (var key in response.question) {
+                    if (response.question[key].required === undefined /*nxt line*/
+                        || response.question[key].required === true) {
+                        $scope.required.push(key);
+                    }
+                }
 
-            if (response.question) {
-                $scope.question = response.question;
-            }
-        });
+                if (response.sheet_info) {
+                    $scope.sheetInfo = response.sheet_info;
+                }
+
+                if (response.question) {
+                    $scope.question = response.question;
+                }
+            });
+        }
     }
 )
 ;
