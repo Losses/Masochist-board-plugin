@@ -1,0 +1,14 @@
+[
+  {
+    "name": "个人自然情况调查",
+    "location": "individual"
+  },
+  {
+    "name": "SCL90 症状自测量表",
+    "location": "scl90"
+  },
+  {
+    "name": "HOSA 生活习惯健康自测 (2014)",
+    "location": "healthy"
+  }
+]
