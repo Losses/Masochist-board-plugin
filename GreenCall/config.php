@@ -11,7 +11,7 @@ $plugin_info = [
 ];
 
 $plugin_injector = [
-
+    "HOOK-AFTER_POST"	=>	"HOOK-AFTER_POST.php"
 ];
 
 $plugin_config = [
