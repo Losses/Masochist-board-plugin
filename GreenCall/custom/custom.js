@@ -2,6 +2,9 @@
  * Created by Don on 3/12/2015.
  */
 $(document).ready(function () {
+    losses.greenCall = {};
+    losses.greenCall.cache = {};
+
     var dialogElement = $('<div>')
         .attr({
             'id': 'green_call_dialog',
@@ -16,7 +19,8 @@ $(document).ready(function () {
         '<div class="call_content">' +
         '    <span class="author"></span>' +
         '    <span class="content"></span>' +
-        '</div>'
+        '</div>' +
+        '<style id="green_call_style"></style>'
     );
 
     $('#common').append(dialogElement);
@@ -55,23 +59,60 @@ $('body')
         $('#new_post>i').click();
     })
 
-    .delegate('.green_call', 'mouseenter', function () {
-        /*need to get message from server*/
-
+    .delegate('.green_call', 'mouseenter', function (event) {
         var dialogElement = $('#green_call_dialog')
-            , greenCallerPosition = $(this).offset()
-            , greenCallLeft = greenCallerPosition.left + parseInt($(this).width()) - parseInt(dialogElement.width()) * 0.5 - 20
-            , greenCallTop = greenCallerPosition.top + 25;
+            , that = this
+            , targetId = $(this).text().match(/>>([1-9]+)/)[1];
 
-        dialogElement.css({
-            'top': greenCallTop,
-            'left': greenCallLeft
-        })
-            .addClass('show');
+        function fillContent(author, content) {
+            setElementPosition();
+            $('#green_call_dialog .loading_spin').hide();
+            $('#green_call_dialog .call_content').show();
+
+            dialogElement.find('.author').text(author);
+            dialogElement.find('.content').text(content);
+        }
+
+        function setElementPosition() {
+            var greenCallerPosition = $(that).offset()
+                , greenCallLeft = greenCallerPosition.left + parseInt($(that).width()) - parseInt(dialogElement.width()) * 0.5 - 20
+                , greenCallTop = greenCallerPosition.top + 25
+                , styleElement = $('#green_call_style');
+
+            if (greenCallLeft < 10) {
+                var eventTargetPositionLeft = $(event.target).offset().left + parseInt($(event.target).width()) * 0.5;
+                var cssContent = "#green_call_dialog::before," +
+                    "             #green_call_dialog::after {" +
+                    "                 left:" + eventTargetPositionLeft + "px;" +
+                    "             }";
+
+                styleElement.html(cssContent);
+            } else {
+                styleElement.html('');
+            }
+
+            dialogElement.css({
+                'top': greenCallTop,
+                'left': greenCallLeft < 10 ? 10 : greenCallLeft
+            })
+                .addClass('show');
+        }
+
+        var targetCache = losses.greenCall.cache['g' + targetId];
+        if (targetCache) {
+            dialogElement.addClass('show');
+
+            fillContent(targetCache.author, targetCache.content);
+            return;
+        }
+
+        dialogElement.show();
+        $('#green_call_dialog .loading_spin').show();
+        $('#green_call_dialog .call_content').hide();
 
         $.post('api/?plugin', {
             'api': 'lark.losses.green.call',
-            'target_id': $(this).text().match(/>>([1-9]+)/)[1]
+            'target_id': targetId
         }, function (data) {
             var response;
             try {
@@ -80,9 +121,13 @@ $('body')
 
             }
 
-            dialogElement.find('.author').text(response.author);
-            dialogElement.find('.content').text(response.content);
+            losses.greenCall.cache['g' + targetId] = JSON.parse(JSON.stringify(response));
+            fillContent(response.author, response.content);
+
+            setElementPosition();
         });
+
+        setElementPosition();
     })
 
     .delegate('.green_call', 'mouseleave', function () {
