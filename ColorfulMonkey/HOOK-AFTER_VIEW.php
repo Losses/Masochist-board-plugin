@@ -6,6 +6,4 @@
     
     global $data;
     
-    echo json_encode($colorful_monkey->color_change($data));
-    
-    exit();
+    $data = $colorful_monkey->color_change($data);
