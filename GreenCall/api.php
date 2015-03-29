@@ -22,7 +22,15 @@ if (isset($_POST['target_id'])) {
 
     for ($i = 0; $i < count($data); $i++) {
         $data[$i]['content'] =
-            $emotion->phrase(RemoveXSS($Parsedown->text($data[$i]['content'])));
+            htmlspecialchars_decode(
+                strip_tags(
+                    $emotion->phrase(
+                        RemoveXSS(
+                            $Parsedown->text($data[$i]['content'])
+                        )
+                    )
+                )
+            );
     }
 
     echo json_encode($data[0]);

@@ -64,6 +64,12 @@ $('body')
             , that = this
             , targetId = $(this).text().match(/>>([1-9]+)/)[1];
 
+        if (parseInt(targetId.length) === 0)
+            return;
+
+        dialogElement.find('.author').text('');
+        dialogElement.find('.content').text('');
+
         function fillContent(author, content) {
             setElementPosition();
             $('#green_call_dialog .loading_spin').hide();
@@ -75,7 +81,7 @@ $('body')
 
         function setElementPosition() {
             var greenCallerPosition = $(that).offset()
-                , greenCallLeft = greenCallerPosition.left + parseInt($(that).width()) - parseInt(dialogElement.width()) * 0.5 - 20
+                , greenCallLeft = greenCallerPosition.left + parseInt($(that).width()) - parseInt(dialogElement.width()) * 0.5 - 120
                 , greenCallTop = greenCallerPosition.top + 25
                 , styleElement = $('#green_call_style');
 
@@ -93,7 +99,7 @@ $('body')
 
             dialogElement.css({
                 'top': greenCallTop,
-                'left': greenCallLeft < 10 ? 10 : greenCallLeft
+                'left': greenCallLeft < 10 ? 20 : greenCallLeft
             })
                 .addClass('show');
         }
