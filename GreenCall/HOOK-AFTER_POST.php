@@ -1,7 +1,5 @@
 <?php
 
-masochist_debug('hello');
-
 global $data;
 
 $pattern = '/&gt;&gt;(\S*)\s/i';

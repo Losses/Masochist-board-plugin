@@ -9,6 +9,19 @@
     color: #388e3c;
 }
 
+.green_call_tag:link,
+.green_call_tag:visited {
+    color: #3f51b5;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 300ms;
+}
+
+.green_call_tag:hover {
+    color: #5c6bc0;
+    text-decoration: underline;
+}
+
 #green_call_dialog {
     max-width: 50%;
     min-width: 100px;
@@ -18,9 +31,9 @@
     margin-top: 30px;
     opacity: 0;
     visibility: hidden;
-    display:none;
+    display: none;
 
-    transition: margin-top 300ms, opacity 300ms, visibility 300ms;
+    transition: margin-top 300ms, opacity 300ms, visibility 300ms, visibility 300ms;
 
     &::before, &::after {
         content: '\feff';
@@ -44,7 +57,7 @@
         margin-top: 0;
         opacity: 1;
         visibility: visible;
-        display:block;
+        display: block;
 
         transition: margin-top 300ms, opacity 300ms, visibility 300ms;
     }
