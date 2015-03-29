@@ -62,7 +62,7 @@ $('body')
     .delegate('.green_call', 'mouseenter', function (event) {
         var dialogElement = $('#green_call_dialog')
             , that = this
-            , targetId = $(this).text().match(/>>([1-9]+)/)[1];
+            , targetId = $(this).text().match(/>>([0-9]+)/)[1];
 
         if (parseInt(targetId.length) === 0)
             return;
