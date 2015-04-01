@@ -12,6 +12,8 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
         $scope.formData = {};
         $scope.finished = false;
         $scope.switchPage = function (action) {
+            $scope.saveData();
+
             if (action > 0) {
                 if ($scope.currentPage + action >= $scope.maxPage) {
                     return false;
@@ -26,7 +28,14 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
             return true;
         };
 
+        $scope.saveData = function () {
+            if (window.localStorage) {
+                localStorage[$scope.route] = JSON.stringify($scope.formData);
+            }
+        };
+
         $scope.submitForm = function () {
+            $scope.saveData();
             $scope.loading = true;
             switchLoading(true);
 
@@ -48,6 +57,9 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 }),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function (response) {
+                if (localStorage[$scope.route]) {
+                    delete (localStorage[$scope.route]);
+                }
                 switchLoading(false);
 
                 if (!response.code) {
@@ -63,6 +75,12 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                     $scope.finished = true;
                     $scope.finishNotice = response.message;
                 }
+            }).error(function(){
+                switchLoading(false);
+                $scope.saveData();
+                $scope.loading = false;
+                
+                publicWarning('提交过程中出现错误，请检查网络连接。')
             });
         };
 
@@ -87,9 +105,9 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
 
                 for (var i = 0; i < response.surveyList.length; i++) {
                     $scope.surveyList.push({
-						'finished': $scope.finished.indexOf(response.surveyList[i].location) === -1,
+                        'finished': $scope.finished.indexOf(response.surveyList[i].location) === -1,
                         'location': '#/' + $rootScope.routeSplited[0] + '/' + response.surveyList[i].location,
-                        'name':response.surveyList[i].name
+                        'name': response.surveyList[i].name
                     });
                 }
             });
@@ -109,6 +127,10 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 $scope.pageSize = response.sheet_info.questionPerPage;
                 $scope.maxPage = Math.ceil(Object.keys(response.question).length / $scope.pageSize);
                 $scope.required = [];
+
+                if (localStorage[$scope.route] && localStorage[$scope.route]) {
+                    $scope.formData = JSON.parse(localStorage[$scope.route]);
+                }
 
                 for (var key in response.question) {
                     if (response.question[key].required === undefined /*nxt line*/
