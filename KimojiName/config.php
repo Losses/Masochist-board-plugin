@@ -1,9 +1,8 @@
 <?php
 /****************************************\
- * GreenCall plugin for Masochist-Board *
- *   Ver 0.1 By Losses Don and Sky Lark *
- *                  midasfree@gmail.com *
- *                 losses.don@gmail.com *
+ * KimojiName plugin for Masochist-Board *
+ * Ver 0.1 By Losses Don and SakuraChino *
+ *                  losses.don@gmail.com *
  ****************************************/
 
 $plugin_info = [
