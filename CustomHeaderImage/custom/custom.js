@@ -13,6 +13,11 @@ $(document).ready(function () {
                 'name': 'かぐや',
                 'index': 'http://oekaki.so/?p=douga&spec=m_profile&id=7015',
                 'img': 'images/custom/theme_1.jpg'
+            },
+            {
+                'name': 'losses',
+                'index': 'http://www.qzworld.net',
+                'img': 'images/custom/theme_3.svg'
             }
         ]
         , randNum = Math.floor(Math.random() * (imgArr.length))
