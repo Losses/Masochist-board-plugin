@@ -79,7 +79,7 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 switchLoading(false);
                 $scope.saveData();
                 $scope.loading = false;
-                
+
                 publicWarning('提交过程中出现错误，请检查网络连接。')
             });
         };
