@@ -9,12 +9,39 @@
 class r
 {
     private $location;
+    private $database;
+    private $dir;
+    private $tmp_dir;
 
     function __construct()
     {
         global $plugin;
+        global $database;
 
         $this->location = $plugin->config["losses.lime.survey.calculate"]["LSC_R_LOCATION"];
+        $this->database = $database;
+        $this->dir = str_replace('\\', '/', dirname(__FILE__)) . '/';
+        $this->tmp_dir = $this->dir . "tmp/";
+    }
+
+    public function export_tables()
+    {
+        global $current_time;
+
+        $sheets = '"' . implode('","', func_get_args()) . '"';
+        $where_query = "WHERE `sheet` IN ($sheets)";
+
+        $random_file_name = md5($current_time . rand(0, 500));
+
+        $result = $this->database->query("SELECT *
+                                          FROM `limesurvey`
+                                          $where_query
+                                          INTO OUTFILE '$this->tmp_dir$random_file_name.csv'
+                                          FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"'
+                                          LINES TERMINATED BY '\\n'")
+                                ->fetchAll();
+
+        return "$this->tmp_dir$random_file_name.csv";
     }
 
     public function run()
@@ -33,5 +60,6 @@ class r
         }
 
         exec("$this->location $file_name $r_arguments");
+        print_r("$this->location $this->dir$file_name $r_arguments");
     }
 }
