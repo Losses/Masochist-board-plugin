@@ -65,7 +65,7 @@ class r
     public function run()
     {
         $arguments = func_get_args();
-        $file_name = 'scripts/' . $arguments[0] . '.r';
+        $file_name = $this->dir . 'scripts/' . $arguments[0] . '.r';
         $r_arguments = '';
 
         for ($i = 1; $i < count($arguments); $i++) {
@@ -77,9 +77,6 @@ class r
             $r_arguments .= ',';
         }
 
-        exec("$this->location $file_name $r_arguments", $result);
-        var_dump($result);
-
-        print_r("$this->location $this->dir$file_name $r_arguments");
+        exec("$this->location $file_name $r_arguments 2>&1", $result); /*Magic...*/
     }
 }

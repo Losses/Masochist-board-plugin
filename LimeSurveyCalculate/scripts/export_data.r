@@ -1,5 +1,19 @@
 arguments <- commandArgs(TRUE)
 
+for (i in 1:6){
+  if (file.exists(arguments[1])){
+    break
+  }
+  
+  if (i == 6){
+    cat ('FILE NOT EXIST\n')
+    quit
+  }
+  
+  Sys.sleep(1)
+}
+
+
 lime_data <- read.csv(
     arguments[1],
     header=TRUE,
