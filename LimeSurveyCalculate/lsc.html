@@ -1,0 +1,54 @@
+<section class="card" id="export_data">
+    <ul>
+        <li ng-repeat="data in dataQuery.exportFrom" class="card_unit">
+            <div class="s_select lsc_sheet_list" id="{{data.identify}}">
+                <input class="select_rebuild" readonly value="{{dataQuery.exportFrom[data.id].sheet}}"/>
+                <button class="s_choosen">{{surveyList[dataQuery.exportFrom[data.id].sheet].name || '选择一张问卷'}}</button>
+                <ul class="s_select_body">
+                    <li ng-repeat="sheet in surveyList"
+                        val="{{sheet.location}}">
+                        {{sheet.name}}
+                    </li>
+                </ul>
+            </div>
+
+            当中的
+
+            <div class="s_select lsc_sheet_list" id="s_{{data.identify}}">
+                <input class="select_rebuild" readonly value="{{dataQuery.exportFrom[data.id].range}}"/>
+                <button class="s_choosen">{{surveyList[dataQuery.exportFrom[data.id].sheet].name || '选择一个范围'}}</button>
+                <ul class="s_select_body">
+                    <li ng-repeat="(key, range) in ranges"
+                        val="{{key}}">
+                        {{range}}
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+    <button ng-click="add();">
+        +
+    </button>
+</section>
+
+<section class="card" id="calculate_option">
+
+</section>
+
+<section class="card button_list">
+    <button>保存配置</button>
+    <button>读取配置</button>
+    <button>执行运算</button>
+</section>
+
+<style>
+    .card {
+        margin: 10px 0;
+    }
+
+    .card_unit {
+        margin: 8px;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+</style>
