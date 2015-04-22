@@ -1,4 +1,5 @@
 <section class="card" id="export_data">
+    <h3>选择数据来源</h3>
     <ul>
         <li ng-repeat="data in dataQuery.exportFrom" class="card_unit">
             <div class="s_select lsc_sheet_list" id="{{data.identify}}">
@@ -26,13 +27,32 @@
             </div>
         </li>
     </ul>
-    <button ng-click="add();">
+    <button ng-click="addSource();">
         +
     </button>
 </section>
 
 <section class="card" id="calculate_option">
+    <h3>选择运算方式</h3>
+    <ul>
+        <li ng-repeat="data in dataQuery.rFile" class="card_unit">
+            <div class="s_select lsc_sheet_list" id="{{data.identify}}">
+                <input class="select_rebuild" readonly value="{{dataQuery.RFile[data.id].file}}"/>
+                <button class="s_choosen">{{RFile[dataQuery.rFile[data.id].file].name || '选择一个运算模型'}}</button>
+                <ul class="s_select_body">
+                    <li ng-repeat="(key, file) in RFile"
+                        val="{{key}}">
+                        {{file.name}}
+                    </li>
+                </ul>
+            </div>
 
+
+        </li>
+    </ul>
+    <button ng-click="addRFile();">
+        +
+    </button>
 </section>
 
 <section class="card button_list">
