@@ -3,8 +3,7 @@
     "title": "个人自然情况调查",
     "guidePage": "本问卷用于联合其他量表的结果，对个体的心里先现象进行区域性分析。 <br> 为了便于心理学研究，我们会为您标定一个唯一ID，该ID用于关联您的各个测量结果，但不会用于确认您是谁、您访问过什么网站和其他隐私内容。",
     "questionPerPage": "10",
-    "countMark": true,
-    "countGroup": ["信息"]
+    "countMark": true
   },
   "sheet": [
     {
