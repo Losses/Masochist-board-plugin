@@ -26,6 +26,31 @@ switch ($_POST['r_action']) {
             response_message(200, $file_name);
         }
         break;
+
+    case 'sheet_list':
+        $lime_survey_location = $plugin->config['losses.lime.survey']['dir_location'];
+        $list = glob("$lime_survey_location/question_db/*.json");
+
+        $return = [];
+        foreach ($list as $question_file) {
+            $this_file = [];
+
+            $question_sheet = json_decode(file_get_contents($question_file), true);
+            $this_file['name'] = $question_sheet['info']['title'];
+            $this_file['location'] = basename($question_file, ".json");
+            $this_file['mark'] = [];
+            if (isset($question_sheet['info']['countGroup']))
+                $this_file['mark'] = array_merge($this_file['mark'], $question_sheet['info']['countGroup']);
+
+            if (isset($question_sheet['info']['marks']))
+                $this_file['mark'] = array_merge($this_file['mark'], $question_sheet['info']['marks']);
+
+            $return[] = $this_file;
+        }
+
+        print_r(json_encode($return));
+        break;
+
     case 'script_list':
         $list = glob("$dir_location/scripts/*.R");
         $options = [];
@@ -63,12 +88,11 @@ switch ($_POST['r_action']) {
                             foreach ($option_parameters[1] as $single_parameter) {
                                 $decode = [];
                                 $divided_parameter = explode('|', $single_parameter);
-                                $decode['name'] = $divided_parameter[0];
                                 if (count($divided_parameter) > 1) {
-                                    $decode['options'] = array_slice($divided_parameter, 1);
+                                    $decode = array_slice($divided_parameter, 1);
                                 }
 
-                                $options[$file_name]['option'][] = $decode;
+                                $options[$file_name]['option'][$divided_parameter[0]] = $decode;
                             }
                             break;
                     }
