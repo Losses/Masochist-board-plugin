@@ -67,9 +67,46 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $http) {
         }),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function (response) {
-        console.log(response);
         $scope.RFile = response;
     });
+
+    $scope.debugInfo = function () {
+        console.log($scope.dataQuery);
+    };
+
+    function generateRandomCharacters() {
+        return md5(Date() + Math.random());
+    }
+
+    //SSELECT ANGULAR VERSION
+    //QAQ 让我死！我要死！我不活啦！
+    (function () {
+        $rootScope.ASSelect = {elementInfo: {}};
+        $rootScope.ASSelect.extendSelectBody = function (identify) {
+            $rootScope.ASSelect.elementInfo[identify] = {};
+
+            $rootScope.ASSelect.elementInfo[identify].selectStatus = 'selected';
+
+            setTimeout(function () {
+                $(document).one('click', function () {
+                    $rootScope.ASSelect.elementInfo[identify].selectStatus = '';
+                    $rootScope.$digest();
+                });
+            }, 200);
+        };
+
+        $rootScope.ASSelect.chooseSelection = function (identify, value) {
+            $rootScope.ASSelect.elementInfo[identify].value = value;
+
+            console.log($rootScope.ASSelect.elementInfo[identify]);
+        }
+    })();
+});
+
+mKnowledge.registerDirective('Option', function () {
+    return {
+        template: 'aaaaaa'
+    }
 });
 
 //Custom Tag
