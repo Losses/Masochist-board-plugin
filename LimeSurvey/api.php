@@ -125,6 +125,23 @@ if (isset($_POST['action'])) {
         $query_insert = [];
 
         foreach ($form_data as $key => $value) {
+            if (!isset($question_table[$key]))
+                if (count($slice_name = explode('_', $key)) > 1) {
+                    array_pop($slice_name);
+                    $question_key = implode('_', $slice_name);
+                    if (!isset($question_table[$question_key]))
+                        continue;
+                } else
+                    continue;
+            else
+                $question_key = $key;
+
+            if (in_array($question_table[$question_key]['type'], ['s', 'm'])) {
+                $value = (int)explode('_', array_keys($question_table[$question_key]['selection'])[$value])[0];
+            } else {
+                $real_value = $value;
+            }
+
             $query_insert[] = [
                 'user' => $_SESSION['LimeSurvey']['id'],
                 'sheet' => $_POST['sheet'],
