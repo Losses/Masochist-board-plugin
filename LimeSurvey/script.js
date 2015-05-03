@@ -149,8 +149,15 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 $scope.title = response.sheet_info.title;
                 $scope.guidePage = response.sheet_info.guidePage;
                 $scope.pageSize = response.sheet_info.questionPerPage;
-                $scope.maxPage = Math.ceil(Object.keys(response.question).length / $scope.pageSize);
+                $scope.maxPage = isArray(response.sheet_info.questionPerPage) /*nxt line */
+                    ? response.sheet_info.questionPerPage.length /*nxt line */
+                    : Math.ceil(Object.keys(response.question).length / $scope.pageSize);
                 $scope.required = [];
+
+                if (isArray(response.sheet_info.questionPerPage)) {
+                    $scope.pageFrom = 0;
+                    $scope.pageTo = response.sheet_info.questionPerPage[0];
+                }
 
                 if (localStorage[$scope.route] && localStorage[$scope.route]) {
                     $scope.formData = JSON.parse(localStorage[$scope.route]);
