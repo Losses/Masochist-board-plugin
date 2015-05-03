@@ -80,9 +80,6 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 }),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function (response) {
-                if (localStorage[$scope.route]) {
-                    delete (localStorage[$scope.route]);
-                }
                 switchLoading(false);
 
                 if (!response.code) {
@@ -95,10 +92,14 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                     publicWarning(response.message);
                 }
                 else {
+                    if (localStorage[$scope.route]) {
+                        delete (localStorage[$scope.route]);
+                    }
+
                     $scope.finished = true;
                     $scope.finishNotice = response.message;
                 }
-            }).error(function(){
+            }).error(function () {
                 switchLoading(false);
                 $scope.saveData();
                 $scope.loading = false;
