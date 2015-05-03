@@ -11,20 +11,43 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
         $scope.maxPage = 0;
         $scope.formData = {};
         $scope.finished = false;
+
+        $scope.pageFrom = 0;
+        $scope.pageTo = 10;
         $scope.switchPage = function (action) {
             $scope.saveData();
 
-            if (action > 0) {
-                if ($scope.currentPage + action >= $scope.maxPage) {
-                    return false;
-                }
-            } else if (action < 0) {
-                if ($scope.currentPage + action < 0) {
-                    return false;
-                }
-            }
+            if (action > 0 && $scope.currentPage + action >= $scope.maxPage)
+                return false;
+            else if (action < 0 && $scope.currentPage + action < 0)
+                return false;
+            else if (action === 0)
+                return false;
 
             $scope.currentPage += action;
+
+            if (isArray($scope.pageSize)) {
+                var direction = action > 0 ? 1 : -1 /*nxt line*/
+                    , jumpSteps = 0;
+
+                for (var i = 1; i <= Math.abs(action); i++) {
+                    var arrow = direction > 0
+                        ? $scope.currentPage - 2 + direction * i
+                        : $scope.currentPage + 1 + direction * i;
+                    if ($scope.pageSize[arrow])
+                        jumpSteps = jumpSteps + direction * $scope.pageSize[arrow];
+                    else
+                        jumpSteps = jumpSteps + direction * $scope.pageSize[$scope.pageSize.length - 1];
+                }
+
+                $scope.pageFrom = $scope.pageFrom + jumpSteps;
+                $scope.pageTo = $scope.pageSize[$scope.currentPage] /*nxt line*/
+                    ? $scope.pageSize[$scope.currentPage] /*nxt line*/
+                    : $scope.pageSize[$scope.pageSize.length - 1];
+            } else {
+                $scope.pageFrom = $scope.currentPage * $scope.pageSize;
+                $scope.pageTo = $scope.pageSize;
+            }
             return true;
         };
 
@@ -146,7 +169,15 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 if (response.question) {
                     $scope.question = response.question;
                 }
+
+                if (response.sheet_info.custom_style) {
+                    $('#lime_custom_style').html(response.sheet_info.custom_style);
+                }
             });
+        }
+
+        function isArray(array) {
+            return Object.prototype.toString.call(array) === "[object Array]";
         }
     }
 )
