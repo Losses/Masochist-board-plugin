@@ -1,13 +1,21 @@
+<div plugin-option></div>
 <section class="card" id="export_data">
     <h3>选择数据来源</h3>
     <ul>
         <li ng-repeat="data in dataQuery.exportFrom" class="card_unit">
             <div class="s_select lsc_sheet_list" id="{{data.identify}}">
-                <input class="select_rebuild" readonly value="{{dataQuery.exportFrom[data.id].sheet}}"/>
-                <button class="s_choosen">{{surveyList[dataQuery.exportFrom[data.id].sheet].name || '选择一张问卷'}}</button>
-                <ul class="s_select_body">
+                <input class="select_rebuild" readonly
+                       ng-model="dataQuery.exportFrom[data.id].sheet"
+                       ng-model-options="{ getterSetter: true }"/>
+                <button class="s_choosen"
+                        ng-click="ASSelect.extendSelectBody(data.identify)"
+                        >
+                    {{surveyList[ASSelect.elementInfo[data.identify].value].name || '选择一张问卷'}}
+                </button>
+                <ul class="s_select_body"
+                    ng-class="ASSelect.elementInfo[data.identify].selectStatus">
                     <li ng-repeat="sheet in surveyList"
-                        val="{{sheet.location}}">
+                        ng-click="ASSelect.chooseSelection(data.identify,sheet.location)">
                         {{sheet.name}}
                     </li>
                 </ul>
@@ -16,7 +24,9 @@
             当中的
 
             <div class="s_select lsc_sheet_list" id="s_{{data.identify}}">
-                <input class="select_rebuild" readonly value="{{dataQuery.exportFrom[data.id].range}}"/>
+                <input class="select_rebuild" readonly
+                       ng-model="dataQuery.exportFrom[data.id].range"
+                       ng-model-options="{ getterSetter: true }"/>
                 <button class="s_choosen">{{surveyList[dataQuery.exportFrom[data.id].sheet].name || '选择一个范围'}}</button>
                 <ul class="s_select_body">
                     <li ng-repeat="(key, range) in ranges"
@@ -56,6 +66,7 @@
 </section>
 
 <section class="card button_list">
+    <button ng-click="debugInfo();">debug</button>
     <button>保存配置</button>
     <button>读取配置</button>
     <button>执行运算</button>
