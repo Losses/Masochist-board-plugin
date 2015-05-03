@@ -66,6 +66,10 @@ if (isset($_POST['action'])) {
             'questionPerPage' => $sheet_content['info']['questionPerPage']
         ];
 
+        $style_location = "$dir_location/styles/$sheet_name.css";
+        if (is_file($style_location))
+            $return['sheet_info']['custom_style'] = file_get_contents("$style_location");
+
         for ($i = 0; $i < count($questions); $i++) {
             $single_question = $questions[$i];
             $pad_id = str_pad($i, 2, "0", STR_PAD_LEFT);
