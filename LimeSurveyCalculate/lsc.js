@@ -1,11 +1,11 @@
 /**
  * Created by Don on 4/11/2015.
  */
-mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $http) {
+mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $http, $rootScope) {
     $('title').text('LimeSurvey 数据分析器 - Masochist-board');
 
     $scope.dataQuery = {exportFrom: [], rFile: []};
-    $scope.maxRangeId = -1;
+    $scope.maxRangeId = 0;
     $scope.ranges = {
         'all': '全部信息',
         'answer': '答案',
@@ -15,15 +15,15 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $http) {
     $scope.addSource = function () {
         var pushContent = {
             'id': $scope.maxRangeId++,
-            'identify': md5(Date()),
+            'identify': generateRandomCharacters(),
             'sheet': null,
             'type': 'all'
         };
         $scope.dataQuery.exportFrom.push(pushContent);
 
         setTimeout(function () {
-            sSelect('#' + pushContent.identify);
-            sSelect('#s_' + pushContent.identify);
+            //sSelect('#' + pushContent.identify, $scope);
+            //sSelect('#s_' + pushContent.identify, $scope);
         }, 100);
     };
 
@@ -43,12 +43,12 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $http) {
         }
     });
 
-    $scope.maxFileId = -1;
+    $scope.maxFileId = 0;
 
     $scope.addRFile = function () {
         var pushContent = {
             'id': $scope.maxFileId++,
-            'identify': md5(Date()),
+            'identify': generateRandomCharacters(),
             'option': {}
         };
         $scope.dataQuery.rFile.push(pushContent);
