@@ -840,7 +840,7 @@
       }
     },
     {
-      "question": "<div class='group_intro'><h3>人际信任量表</h3><p>使用以下标准表明你对下列美衣陈述同意或不同意的程度，请按各个问题的具体要求选择最符合您情况的答案。</p></div>",
+      "question": "<div class='group_intro'><h3>人际信任量表</h3><p>使用以下标准表明你对下列每一陈述同意或不同意的程度，请按各个问题的具体要求选择最符合您情况的答案。</p></div>",
       "type": "introduce",
       "required": false
     },
