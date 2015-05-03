@@ -183,6 +183,8 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 if (response.sheet_info.custom_style) {
                     $('#lime_custom_style').html(response.sheet_info.custom_style);
                 }
+
+                $rootScope.title = response.sheet_info.title + ' - LimeSurvey By Masochist-board'
             });
         }
 
