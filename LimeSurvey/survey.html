@@ -206,6 +206,9 @@
 		}
 	}
 </style>
+<style id="lime_custom_style">
+
+</style>
 <div class="lime_survey">
 	<div ng-if="!route">
 		<div class="lime_logo">
@@ -239,8 +242,8 @@
         </section>
         <section ng-show="viewed  && !finished">
             <ul>
-                <li ng-repeat="singleQuestion in question | object2Array | startFrom : currentPage * pageSize | limitTo : pageSize">
-                    <span class="question">{{singleQuestion.question}}</span>
+                <li ng-repeat="singleQuestion in question | object2Array | startFrom : pageFrom | limitTo : pageTo">
+                    <span class="question" ng-bind-html="singleQuestion.question | trustHtml"></span>
 
                     <div ng-if="singleQuestion.type == 's'" class="answer_area">
                         <label ng-repeat="(sid,singleSelection) in singleQuestion.selection"
