@@ -31,14 +31,14 @@ if (isset($_POST['list'])) {
     $return = [];
     $return['surveyList'] = json_decode(file_get_contents("$dir_location/list.json"), true);
     $id = $_SESSION['LimeSurvey']['id'];
-    
+
     $return['finished'] = [];
     $finished_sheet = $database->query("SELECT `sheet` FROM `limesurvey`
                                         WHERE `user` = '$id'
                                         GROUP BY `sheet`")->fetchAll();
-    for ($i = 0; $i<count($finished_sheet); $i++){
-		$return['finished'][] = $finished_sheet[$i]['sheet'];
-	}
+    for ($i = 0; $i < count($finished_sheet); $i++) {
+        $return['finished'][] = $finished_sheet[$i]['sheet'];
+    }
 
     echo json_encode($return);
     exit();
