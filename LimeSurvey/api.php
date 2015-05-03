@@ -108,6 +108,7 @@ if (isset($_POST['action'])) {
         $form_data = json_decode($_POST['form_data'], true);
         $questions = $sheet_content['sheet'];
         $required = [];
+        $question_table = [];
 
         for ($i = 0; $i < count($questions); $i++) {
             if (!isset($questions[$i]['required'])
@@ -126,6 +127,12 @@ if (isset($_POST['action'])) {
                 response_message(403, '请完成所有必填内容！');
         }
 
+        //建立问题索引
+        foreach ($sheet_content['sheet'] as $single_question) {
+            if (isset($single_question['id'])) {
+                $question_table[$single_question['id']] = $single_question;
+            }
+        }
         $query_insert = [];
 
         foreach ($form_data as $key => $value) {
