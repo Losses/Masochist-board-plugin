@@ -228,8 +228,13 @@
 			</li>
 		</ul>
 	</div>
+
     <form name="pluginCtrl$pluginPageCtrl.LineSurvey" ng-if="route">
-        <section class="guide_page" ng-show="!viewed && !finished">
+        <section class="error" ng-if="error">
+            <h3>您之前已完成过此量表</h3>
+            <p>您之前已经完成过此量表，同一量每人只能完成一次。表感谢您的配合！</p>
+        </section>
+        <section class="guide_page" ng-show="!viewed && !finished && !error">
             <h1>
                 {{title}}
             </h1>

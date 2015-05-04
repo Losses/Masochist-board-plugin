@@ -50,13 +50,26 @@ if (!isset($_POST['sheet']))
 $sheet_name = $_POST['sheet'];
 
 if (!is_file($sheet_location = "$dir_location/question_db/$sheet_name.json"))
-    response_message(404, "$sheet_location");
+    response_messSage(404, "$sheet_location");
 
 $sheet_content = json_decode(file_get_contents($sheet_location), true);
 
 
 if (isset($_POST['action'])) {
     if ($_POST['action'] == 'get') {
+        //重复检测
+        $where_condition = [
+            'AND' => [
+                'user' => $_SESSION['LimeSurvey']['id'],
+                'sheet' => $_POST['sheet']
+            ]
+        ];
+
+        $repeat_check = $database->select('limesurvey', 'id', $where_condition);
+
+        if (count($repeat_check) > 0)
+            response_message(403, '您之前已完成过此问卷');
+
         $return = ['sheet_info' => [], 'question' => []];
         $questions = $sheet_content['sheet'];
 

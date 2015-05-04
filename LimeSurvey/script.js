@@ -148,6 +148,11 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
                 }),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).success(function (response) {
+                if (response.code && response.code == 403) {
+                    $scope.error = true;
+                    return;
+                }
+
                 $scope.title = response.sheet_info.title;
                 $scope.guidePage = response.sheet_info.guidePage;
                 $scope.pageSize = response.sheet_info.questionPerPage;
