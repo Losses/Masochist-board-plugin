@@ -22,8 +22,8 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $http, $rootScope)
         $scope.dataQuery.exportFrom.push(pushContent);
 
         setTimeout(function () {
-            //sSelect('#' + pushContent.identify, $scope);
-            //sSelect('#s_' + pushContent.identify, $scope);
+            sSelect('#' + pushContent.identify, $scope);
+            sSelect('#s_' + pushContent.identify, $scope);
         }, 100);
     };
 

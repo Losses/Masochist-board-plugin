@@ -27,7 +27,9 @@
                 <input class="select_rebuild" readonly
                        ng-model="dataQuery.exportFrom[data.id].range"
                        ng-model-options="{ getterSetter: true }"/>
-                <button class="s_choosen">{{surveyList[dataQuery.exportFrom[data.id].sheet].name || '选择一个范围'}}</button>
+                <button class="s_choosen">
+                    {{surveyList[dataQuery.exportFrom[data.id].sheet].name || '选择一个范围'}}
+                </button>
                 <ul class="s_select_body">
                     <li ng-repeat="(key, range) in ranges"
                         val="{{key}}">

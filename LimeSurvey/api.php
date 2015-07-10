@@ -57,6 +57,7 @@ $sheet_content = json_decode(file_get_contents($sheet_location), true);
 
 if (isset($_POST['action'])) {
     if ($_POST['action'] == 'get') {
+        /*
         //重复检测
         $where_condition = [
             'AND' => [
@@ -69,7 +70,7 @@ if (isset($_POST['action'])) {
 
         if (count($repeat_check) > 0)
             response_message(403, '您之前已完成过此问卷');
-
+*/
         $return = ['sheet_info' => [], 'question' => []];
         $questions = $sheet_content['sheet'];
 
@@ -90,7 +91,7 @@ if (isset($_POST['action'])) {
 
             $return['question'][$id]['id'] = $id;
 
-            $required_fill = ['question', 'type', 'required', 'suffix', 'prefix', 'hint'];
+            $required_fill = ['question', 'type', 'required', 'suffix', 'prefix', 'hint', 'force-warp'];
 
             for ($l = 0; $l < count($required_fill); $l++) {
                 if (isset($single_question[$required_fill[$l]]))

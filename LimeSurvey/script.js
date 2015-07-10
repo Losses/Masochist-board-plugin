@@ -64,6 +64,7 @@ mKnowledge.registerPlugin('pluginPageCtrl', function ($scope, $rootScope, $http)
 
             for (var k = 0; k < $scope.required.length; k++) {
                 if ($scope.formData[$scope.required[k]] === undefined) {
+                    console.log($scope.required[k]);
                     publicWarning('问卷中有未完成的题目！');
                     $scope.loading = false;
                     switchLoading(false);

@@ -8,8 +8,8 @@ $regex = [
         'replacement' => '<span class="green_call">&gt;&gt;${1}</span>${2}'
     ],
     [
-        'pattern' => '/#(\S*)(\s*)/i',
-        'replacement' => '<a class="green_call_tag" href="#/search/${1}">#${1}</a>${2}'
+        'pattern' => '/(^|\b)+#(\S*)/i',
+        'replacement' => '<a class="green_call_tag" href="#/search/${1}">#${2}</a>'
     ]
 ];
 
